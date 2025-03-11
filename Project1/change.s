@@ -28,6 +28,10 @@ main:
 		li	$v0, 4
 		la	$a0, newline
 		syscall
+
+		li	$v0, 4
+		la	$a0, newline
+		syscall
 	
 		li	$v0, 4		# Prompt for receipt amount
 		la	$a0, receiptPrompt
@@ -51,7 +55,6 @@ main:
 		la	$a0, newline	# Print newline
 		syscall
 	
-		
 		beqz	$t2, no_change	# If no change, display "No change" message
 	
 		li	$t3, 25
