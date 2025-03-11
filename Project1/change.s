@@ -9,9 +9,9 @@
 #
 
 		.data
-title:		.asciiz "Change Machine by A. Hakeem\n"
-receiptPrompt:	.asciiz "Enter the receipt amount? #"
-tenderedPrompt:	.asciiz "Enter the amount tendered? #"
+title:		.asciiz "Change Machine by A. Hakeem"
+receiptPrompt:	.asciiz "Enter the receipt amount? "
+tenderedPrompt:	.asciiz "Enter the amount tendered? "
 quarterOutput:	.asciiz "Quarters: "
 dimeOutput:	.asciiz "Dimes:   "
 nickelOutput:	.asciiz "Nickels:  "
@@ -23,6 +23,10 @@ newline:	.asciiz "\n"
 main:
 		li	$v0, 4
 		la	$a0, title	# Display title
+		syscall
+
+		li	$v0, 4
+		la	$a0, newline
 		syscall
 	
 		li	$v0, 4		# Prompt for receipt amount
