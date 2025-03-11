@@ -9,63 +9,54 @@
 #
 
 		.data
-title:          .asciiz "Change-Machine-by-A. Hakeem\n"
-receiptPrompt:  .asciiz "Enter the receipt amount? #"
-tenderedPrompt: .asciiz "Enter the amount tendered? #\n"
-quarterOutput:  .asciiz "Quarters: "
-dimeOutput:     .asciiz "Dimes:   "
-nickelOutput:   .asciiz "Nickels:  "
-pennyOutput:    .asciiz "Pennies:  "
-noChangeMsg:    .asciiz "No change"
-newline:        .asciiz "\n"
+title:		.asciiz "Change Machine by A. Hakeem\n"
+receiptPrompt:	.asciiz "Enter the receipt amount? #"
+tenderedPrompt:	.asciiz "Enter the amount tendered? #"
+quarterOutput:	.asciiz "Quarters: "
+dimeOutput:	.asciiz "Dimes:   "
+nickelOutput:	.asciiz "Nickels:  "
+pennyOutput:	.asciiz "Pennies:  "
+noChangeMsg:	.asciiz "No change"
+newline:	.asciiz "\n"
 
-        	.text
+		.text
 main:
-        	# Display title
-	    	li	$v0, 4
-	    	la	$a0, title
-	    	syscall
+		li	$v0, 4
+		la	$a0, title	# Display title
+		syscall
 	
-	    	# Prompt for receipt amount
-	    	li	$v0, 4
-	    	la	$a0, receiptPrompt
-	    	syscall
+		li	$v0, 4		# Prompt for receipt amount
+		la	$a0, receiptPrompt
+		syscall
 	
-	    	# Read receipt amount
-	    	li	$v0, 5
-	    	syscall
-	    	move	$t0, $v0   # $t0 = receipt amount in cents
-	
-	    	# Prompt for tendered amount
-	    	li	$v0, 4
-	    	la	$a0, tenderedPrompt
-	    	syscall
-	
-		# Read tendered amount
 		li	$v0, 5
 		syscall
-		move	$t1, $v0   # $t1 = tendered amount in cents
+		move	$t0, $v0	# $t0 = receipt amount in cents
 	
-		# Calculate change amount
-		sub	$t2, $t1, $t0   # $t2 = change amount
-	
-		# Print newline
-		li	$v0, 4
-		la	$a0, newline
+		li	$v0, 4		# Prompt for tendered amount
+		la	$a0, tenderedPrompt
 		syscall
 	
-		# Check if there is any change to give
-		beqz	$t2, no_change
+		li	$v0, 5
+		syscall
+		move	$t1, $v0	# $t1 = tendered amount in cents
 	
-		# Calculate number of quarters (25 cents)
+		sub	$t2, $t1, $t0	# $t2 = change amount
+	
+		li	$v0, 4
+		la	$a0, newline	# Print newline
+		syscall
+	
+		
+		beqz	$t2, no_change	# If no change, display "No change" message
+	
 		li	$t3, 25
 		div	$t2, $t3
-		mflo	$t4        # $t4 = number of quarters
-		mfhi	$t2        # $t2 = remaining change
+		mflo	$t4		# $t4 = number of quarters
+		mfhi	$t2		# $t2 = remaining change
 	
-		# Display quarters if greater than 0
 		beqz	$t4, skip_quarters
-		li	$v0, 4
+		li	$v0, 4		# Display quarters if greater than 0
 		la	$a0, quarterOutput
 		syscall
 	
@@ -78,13 +69,11 @@ main:
 		syscall
 	
 skip_quarters:
-		# Calculate number of dimes (10 cents)
 		li	$t3, 10
 		div	$t2, $t3
-		mflo	$t4        # $t4 = number of dimes
-		mfhi	$t2        # $t2 = remaining change
+		mflo	$t4		# $t4 = number of dimes
+		mfhi	$t2		# $t2 = remaining change
 		
-		# Display dimes if greater than 0
 		beqz	$t4, skip_dimes
 		li	$v0, 4
 		la	$a0, dimeOutput
@@ -99,13 +88,11 @@ skip_quarters:
 		syscall
 	
 skip_dimes:
-		# Calculate number of nickels (5 cents)
 		li	$t3, 5
 		div	$t2, $t3
-		mflo	$t4        # $t4 = number of nickels
-		mfhi	$t2        # $t2 = remaining change (pennies)
+		mflo	$t4		# $t4 = number of nickels
+		mfhi	$t2		# $t2 = remaining change (pennies)
 		
-		# Display nickels if greater than 0
 		beqz	$t4, skip_nickels
 		li	$v0, 4
 		la	$a0, nickelOutput
@@ -120,10 +107,8 @@ skip_dimes:
 		syscall
 	
 skip_nickels:
-		# Remaining cents are pennies
-		# Display pennies if greater than 0
 		beqz	$t2, skip_pennies
-		li	$v0, 4
+		li	$v0, 4		# Display pennies if greater than 0
 		la	$a0, pennyOutput
 		syscall
 		
@@ -139,12 +124,10 @@ skip_pennies:
 		j	exit
 	
 no_change:
-		# Display "No change" message
-		li	$v0, 4
+		li	$v0, 4		# Display "No change" message
 		la	$a0, noChangeMsg
 		syscall
 	
 exit:
-		# Exit program
-		li	$v0, 10
-		syscall 
+		li	$v0, 10		# Exit program
+		syscall
