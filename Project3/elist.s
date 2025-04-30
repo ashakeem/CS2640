@@ -117,7 +117,7 @@ getnode_ret:
         addi $sp, $sp, 4
         jr $ra
 
-# traverse: recursively 
+# traverse: recursively calls proc on nodes from end to head (original read order)
 traverse:
         beqz $a0, traverse_done # Check null
 
@@ -126,15 +126,18 @@ traverse:
         sw $a0, 4($sp)      # Save current node addr
         sw $a1, 0($sp)      # Save proc addr
 
+        # --- Recurse first ---
         lw $a0, 4($a0)          # $a0 = list->next
         # $a1 (proc addr) is already set for recursive call
         jal traverse
 
+        # --- Process node AFTER recursion returns ---
         lw $a1, 0($sp)          # Restore proc addr
         lw $t0, 4($sp)          # Restore current node addr into $t0
         lw $a0, 0($t0)          # $a0 = current_node->data (arg for proc)
         jalr $a1                    # Call proc($a0)
 
+        # Restore registers for return
         lw $a1, 0($sp)          # Not strictly needed, but restores state
         lw $a0, 4($sp)      # Not strictly needed, but restores state
         lw $ra, 8($sp)
@@ -164,9 +167,6 @@ print:
         li $v0, 4
         syscall
 
-        la $a0, newline         # Print nl
-        li $v0, 4
-        syscall
 
         lw $s0, 0($sp)          # Restore regs
         lw $ra, 4($sp)
@@ -228,6 +228,6 @@ strdup_ret:
         jr $ra
 
 malloc:
-        li $v0, 9               
+        li $v0, 9
         syscall
         jr $ra
