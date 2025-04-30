@@ -13,8 +13,8 @@ head:           .word 0         # Head ptr
 input:          .space 80       # Input buffer
 ptfname:        .asciiz "/Users/ayomidehakeem/Desktop/CS2640/Project3/enames.dat"
 count:          .word 0         # Element count
-title:          .asciiz "Elements by A. Hakeem v0.1\n\n\n"
-countMsg:       .asciiz "# elements\n\n\n"
+title:          .asciiz "Elements by A. Hakeem v0.1\n\n"
+countMsg:       .asciiz "# elements\n\n"
 separator:      .asciiz ":"
 newline:        .asciiz "\n"
 malloc_err:     .asciiz "Error: Failed to allocate memory.\n"
